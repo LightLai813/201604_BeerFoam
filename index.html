@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=640, user-scalable=no" />
+<!--以上勿動 -->
+<title>Vpon</title>
+<style type="text/css">
+	body {
+		margin:0; 
+		padding:0;
+	}
+
+	#wrapper {
+		position: absolute ;
+		width:640px;
+		height:100%;
+	    background-color:#000;
+	}
+
+	#myCanvas{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index:2;
+	}
+	
+	#Beer{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index:1;
+	}
+</style>
+
+</head>
+
+<body>
+	<div id="wrapper">
+		<img id="Beer" src="beer.jpg" />
+		<canvas id="myCanvas" width="580" height="860" style="position: absolute; "></canvas>
+		
+	</div>
+	<!--勿動 -->
+	<script type="text/javascript">
+		var RndInt = function(min, max) {
+		    return Math.floor(Math.random()*(max - min + 1) + min);
+		}
+	</script>
+	<script type="text/javascript">
+		var points = [];
+		var pointsV = [];
+		var liquidColor = ['#333','#BBA','#CCB','#DDC','#EED','#FFF'];
+
+		var pObj = function(x){
+			this.x = x;
+			this.y = 0;
+		}
+
+		var pointAmount = 10;
+		var pointCount = pointAmount;
+
+		points.push(new pObj(0));
+		while(pointCount--){
+			points.push(new pObj((1- pointCount/pointAmount)*600 + RndInt(-15,15)));
+			pointsV.push((pointCount % 2 == 0? RndInt(10,25) : RndInt(15,40)));
+		}
+
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+
+		function drewLiquid(){
+			ctx.clearRect(0,0,c.width,c.height);
+			
+			for(var i = 0, colorLen = liquidColor.length; i<colorLen;i++) drawLiquid(i);
+
+			// for (var i = 0, pLen = points.length; i <  pLen-1; i++) {
+	  //     		ctx.fillStyle = "Red";
+	  //     		ctx.fillRect(points[i].x,points[i].y ,10,10);
+	  //  		}
+		}
+
+		function drawLiquid(index){
+			var layerDiff = 1 * index;
+			var FP_x, FP_y, BP_x, BP_y, CP_x, CP_y;
+
+			ctx.beginPath();
+			ctx.moveTo(points[0].x, points[0].y);
+
+	   		for (var i = 1, pLen = points.length; i <  pLen - 1; i++) {
+	   			if(index == 0) points[i].y += pointsV[i] * 0.05;
+
+	   			FP_x = points[i-1].x ;
+	   			FP_y = points[i-1].y - layerDiff * index * (points[i-1].y * 0.005);
+	   			BP_x = points[i].x ;
+	   			BP_y = points[i].y - layerDiff * index * (points[i].y * 0.005);
+
+	      		CP_x = (FP_x + BP_x) / 2;
+	      		CP_y = (FP_y + BP_y) / 2;
+
+	      		ctx.bezierCurveTo(
+	      			(CP_x + FP_x) * 0.5, 
+	      			FP_y , 
+	      			CP_x, 
+	      			(CP_y + FP_y) * 0.5, 
+	      			CP_x, 
+	      			CP_y
+	      		);
+
+	      		ctx.bezierCurveTo(
+	      			CP_x, 
+	      			(CP_y + BP_y) * 0.5 , 
+	      			(CP_x + BP_x) * 0.5 , 
+	      			BP_y, 
+	      			BP_x, 
+	      			BP_y
+	      		);
+	   		}
+
+ 			FP_x = points[points.length-2].x;
+   			FP_y = points[points.length-2].y - layerDiff * index;
+   			BP_x = points[points.length-1].x;
+   			BP_y = points[points.length-1].y;
+
+      		CP_x = (FP_x + BP_x) / 2;
+      		CP_y = (FP_y + BP_y) / 2;
+
+      		ctx.bezierCurveTo(
+      			(CP_x + FP_x) * 0.5, 
+      			FP_y , 
+      			CP_x, 
+      			(CP_y + FP_y) * 0.5, 
+      			CP_x, 
+      			CP_y
+      		);
+
+      		ctx.bezierCurveTo(
+      			CP_x, 
+      			(CP_y + BP_y) * 0.5 , 
+      			(CP_x + BP_x) * 0.5 , 
+      			BP_y, 
+      			BP_x, 
+      			BP_y
+      		);
+
+ 			ctx.closePath();
+			ctx.fillStyle = liquidColor[index];
+			ctx.fill();
+		}
+
+		setInterval(function(){ drewLiquid(); }, 60);
+	</script>
+</body>
+</html>
