@@ -1,52 +1,42 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=640, user-scalable=no" />
-<!--以上勿動 -->
-<title>Vpon</title>
-<style type="text/css">
-	body {
-		margin:0; 
-		padding:0;
-	}
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=640, user-scalable=no" />
+	<title>201604_BeerFoam｜Eugene's works</title>
+	<style type="text/css">
+		body {
+			margin:0; 
+			padding:0;
+		}
 
-	#wrapper {
-		position: absolute ;
-		width:640px;
-		height:100%;
-	    background-color:#000;
-	}
+		#wrapper {
+			position: absolute ;
+			width:640px;
+			height:100%;
+			background-color:#000;
+		}
 
-	#myCanvas{
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		z-index:2;
-	}
-	
-	#Beer{
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		z-index:1;
-	}
-</style>
-
+		#myCanvas{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index:2;
+		}
+		
+		#Beer{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index:1;
+		}
+	</style>
 </head>
-
 <body>
 	<div id="wrapper">
 		<img id="Beer" src="beer.jpg" />
 		<canvas id="myCanvas" width="580" height="860" style="position: absolute; "></canvas>
-		
 	</div>
-	<!--勿動 -->
-	<script type="text/javascript">
-		var RndInt = function(min, max) {
-		    return Math.floor(Math.random()*(max - min + 1) + min);
-		}
-	</script>
 	<script type="text/javascript">
 		var points = [];
 		var pointsV = [];
@@ -59,6 +49,10 @@
 
 		var pointAmount = 10;
 		var pointCount = pointAmount;
+		
+		var RndInt = function(min, max) {
+		    return Math.floor(Math.random()*(max - min + 1) + min);
+		}
 
 		points.push(new pObj(0));
 		while(pointCount--){
@@ -66,19 +60,12 @@
 			pointsV.push((pointCount % 2 == 0? RndInt(10,25) : RndInt(15,40)));
 		}
 
-
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 
 		function drewLiquid(){
 			ctx.clearRect(0,0,c.width,c.height);
-			
 			for(var i = 0, colorLen = liquidColor.length; i<colorLen;i++) drawLiquid(i);
-
-			// for (var i = 0, pLen = points.length; i <  pLen-1; i++) {
-	  //     		ctx.fillStyle = "Red";
-	  //     		ctx.fillRect(points[i].x,points[i].y ,10,10);
-	  //  		}
 		}
 
 		function drawLiquid(index){
